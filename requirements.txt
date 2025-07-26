@@ -1,2 +1,4 @@
+
 Flask==2.3.2
 sendgrid==6.11.0
+requests==2.31.0
