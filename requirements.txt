@@ -1,3 +1,1 @@
-fastapi
-uvicorn
-pytz
+Flask==2.3.2
