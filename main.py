@@ -46,9 +46,12 @@ def send_emails():
 
         # Use UTC+4 timezone for date to match 10 AM +04 schedule
         utc_plus_4 = timezone(timedelta(hours=4))
-        today = datetime.now(utc_plus_4).strftime('%Y-%m-%d')
-        timestamp = int(datetime.now(utc_plus_4).timestamp())
-        html = template.replace("{{TODAY}}", today).replace("{{TIMESTAMP}}", str(timestamp)).replace("{{DATE}}", today)
+        now = datetime.now(utc_plus_4)
+        today_str = now.strftime('%d %B %Y')  # Example: 28 July 2025
+        timestamp = int(now.timestamp())
+
+        # Fill in the template placeholders
+        html = template.replace("{{TODAY}}", today_str).replace("{{TIMESTAMP}}", str(timestamp)).replace("{{DATE}}", today_str)
 
         sg = SendGridAPIClient(SENDGRID_API_KEY)
 
@@ -59,8 +62,8 @@ def send_emails():
 
             personalized_html = html.replace("{{NAME}}", name)
 
-            # Include the date in the email subject
-            subject = f"📊 Daily Forex Signals - Forex_Bullion - {today}"
+            # Correct subject line with formatted date
+            subject = f"📊 Daily Forex Signals - Forex_Bullion - {today_str}"
 
             message = Mail(
                 from_email=From(SENDER_EMAIL, "Forex_Bullion"),
