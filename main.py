@@ -74,6 +74,3 @@ def send_emails():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
-
-this is my flask api that sends email to clients using sendgrid. i want to automate it using n8n and send emails everyday at 10 am
