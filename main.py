@@ -7,10 +7,8 @@ import os
 import requests
 import logging
 import traceback
-import sentry_sdk  # For error monitoring
-from sentry_sdk.integrations.flask import FlaskIntegration
 
-# Load environment variables locally if .env exists
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
@@ -22,18 +20,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize Sentry for error monitoring (if SENTRY_DSN is set)
-if os.getenv('SENTRY_DSN'):
-    sentry_sdk.init(
-        dsn=os.getenv('SENTRY_DSN'),
-        integrations=[FlaskIntegration()],
-        traces_sample_rate=1.0
-    )
-
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 SENDER_EMAIL = os.getenv('SENDER_EMAIL')
 TEMPLATE_PATH = "template.html"
-AUTH_TOKEN = os.getenv('API_AUTH_TOKEN')  # For securing your API endpoint
+AUTH_TOKEN = os.getenv('API_AUTH_TOKEN')  # For securing API endpoint
 
 @app.route('/', methods=['GET'])
 def home():
@@ -42,10 +32,11 @@ def home():
 @app.route('/send-emails', methods=['POST'])
 def send_emails():
     try:
-        # Basic authentication check for n8n
+        # Authentication check
         if AUTH_TOKEN:
             auth_header = request.headers.get('Authorization')
             if not auth_header or auth_header != f"Bearer {AUTH_TOKEN}":
+                logger.warning("Unauthorized access attempt")
                 return jsonify({
                     "success": False,
                     "error": "Unauthorized"
@@ -68,7 +59,7 @@ def send_emails():
         response = requests.get(
             "https://api.sendgrid.com/v3/marketing/contacts",
             headers=headers,
-            params={"page_size": 1000}  # Adjust based on your contact count
+            params={"page_size": 1000}
         )
 
         if response.status_code != 200:
@@ -88,7 +79,7 @@ def send_emails():
                 "count": 0
             }), 200
 
-        # Read and render HTML template
+        # Read email template
         try:
             with open(TEMPLATE_PATH, 'r', encoding='utf-8') as file:
                 template = file.read()
@@ -146,7 +137,7 @@ def send_emails():
                 })
                 logger.error(f"Error sending to {email}: {str(e)}")
 
-        # Prepare response with detailed stats
+        # Prepare response
         response_data = {
             "success": True,
             "message": f"Email sending completed. Success: {success_count}, Failures: {failure_count}",
