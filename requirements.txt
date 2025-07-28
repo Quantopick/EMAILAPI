@@ -2,3 +2,4 @@ flask
 sendgrid
 requests
 python-dotenv
+gunicorn
