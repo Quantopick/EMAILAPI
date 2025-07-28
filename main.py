@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, From, To, HtmlContent
 from dotenv import load_dotenv
@@ -44,8 +44,10 @@ def send_emails():
         with open(TEMPLATE_PATH, 'r', encoding='utf-8') as file:
             template = file.read()
 
-        today = datetime.utcnow().strftime('%Y-%m-%d')
-        timestamp = int(datetime.utcnow().timestamp())
+        # Use UTC+4 timezone for date to match 10 AM +04 schedule
+        utc_plus_4 = timezone(timedelta(hours=4))
+        today = datetime.now(utc_plus_4).strftime('%Y-%m-%d')
+        timestamp = int(datetime.now(utc_plus_4).timestamp())
         html = template.replace("{{TODAY}}", today).replace("{{TIMESTAMP}}", str(timestamp)).replace("{{DATE}}", today)
 
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -57,10 +59,13 @@ def send_emails():
 
             personalized_html = html.replace("{{NAME}}", name)
 
+            # Include the date in the email subject
+            subject = f"📊 Daily Forex Signals - Forex_Bullion - {today}"
+
             message = Mail(
                 from_email=From(SENDER_EMAIL, "Forex_Bullion"),
                 to_emails=To(email),
-                subject="📊 Daily Forex Signals - Forex_Bullion",
+                subject=subject,
                 html_content=HtmlContent(personalized_html)
             )
 
