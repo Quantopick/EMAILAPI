@@ -9,12 +9,14 @@ app = Flask(__name__)
 
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL')  # Example: 'support@forex_bullion.com'
+
+# Replace these with your own
 TEMPLATE_PATH = "template.html"
 
 @app.route('/send-emails', methods=['GET'])
 def send_emails():
     try:
-        # Fetch contacts from SendGrid
+        # Fetch contacts
         headers = {
             "Authorization": f"Bearer {SENDGRID_API_KEY}",
             "Content-Type": "application/json"
@@ -22,16 +24,14 @@ def send_emails():
         response = requests.get("https://api.sendgrid.com/v3/marketing/contacts", headers=headers)
         contacts = response.json().get("result", [])
 
-        # Read email HTML template
+        # Read template and replace placeholders
         with open(TEMPLATE_PATH, 'r', encoding='utf-8') as file:
             template = file.read()
 
-        # Replace placeholders
         today = datetime.utcnow().strftime('%Y-%m-%d')
         timestamp = int(datetime.utcnow().timestamp())
         html = template.replace("{{TODAY}}", today).replace("{{TIMESTAMP}}", str(timestamp)).replace("{{DATE}}", today)
 
-        # Send email to each contact
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         for contact in contacts:
             email = contact.get("email")
@@ -48,4 +48,5 @@ def send_emails():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Do not include app.run() here — Gunicorn will handle running the app
+if __name__ == '__main__':
+    app.run(debug=True)
