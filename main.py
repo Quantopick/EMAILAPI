@@ -96,8 +96,8 @@ if __name__ == '__main__':
         scheduled_email_job,
         trigger='cron',
         day_of_week='mon-fri',
-        hour=11,
-        minute=20
+        hour=10,
+        minute=01
     )
 
     scheduler.start()
@@ -106,4 +106,5 @@ if __name__ == '__main__':
         app.run(host='0.0.0.0', port=5000)
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
+
 
