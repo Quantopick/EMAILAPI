@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import os
 import requests
 import logging
+from apscheduler.schedulers.background import BackgroundScheduler
+import pytz
 
 # Load environment variables locally if .env exists
 load_dotenv()
@@ -15,6 +17,9 @@ app = Flask(__name__)
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 SENDER_EMAIL = os.getenv('SENDER_EMAIL')  # e.g., support@forex_bullion.com
 TEMPLATE_PATH = "template.html"
+
+# ✅ UAE Timezone
+UAE_TZ = pytz.timezone("Asia/Dubai")
 
 @app.route('/', methods=['GET'])
 def home():
@@ -44,14 +49,13 @@ def send_emails():
         with open(TEMPLATE_PATH, 'r', encoding='utf-8') as file:
             template = file.read()
 
-        # Use UTC+4 timezone for date to match 10 AM +04 schedule
-        utc_plus_4 = timezone(timedelta(hours=4))
-        now = datetime.now(utc_plus_4)
+        now = datetime.now(UAE_TZ)
         today_str = now.strftime('%d %B %Y')  # Example: 28 July 2025
         timestamp = int(now.timestamp())
 
-        # Fill in the template placeholders
-        html = template.replace("{{TODAY}}", today_str).replace("{{TIMESTAMP}}", str(timestamp)).replace("{{DATE}}", today_str)
+        html = template.replace("{{TODAY}}", today_str)\
+                       .replace("{{TIMESTAMP}}", str(timestamp))\
+                       .replace("{{DATE}}", today_str)
 
         sg = SendGridAPIClient(SENDGRID_API_KEY)
 
@@ -59,10 +63,7 @@ def send_emails():
         for contact in contacts:
             email = contact.get("email")
             name = contact.get("first_name", "Trader")
-
             personalized_html = html.replace("{{NAME}}", name)
-
-            # Correct subject line with formatted date
             subject = f"📊 Daily Forex Signals - Forex_Bullion - {today_str}"
 
             message = Mail(
@@ -80,5 +81,28 @@ def send_emails():
         logging.exception("Error occurred during email sending:")
         return jsonify({"error": str(e)}), 500
 
+# ✅ Function to be called by the scheduler
+def scheduled_email_job():
+    with app.app_context():
+        print(f"[{datetime.now(UAE_TZ).strftime('%Y-%m-%d %H:%M:%S')}] Sending scheduled emails...")
+        send_emails()
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # ✅ Scheduler Setup
+    scheduler = BackgroundScheduler(timezone=UAE_TZ)
+
+    # Job runs at 10:00 AM Monday to Friday
+    scheduler.add_job(
+        scheduled_email_job,
+        trigger='cron',
+        day_of_week='mon-fri',
+        hour=11,
+        minute=15
+    )
+
+    scheduler.start()
+
+    try:
+        app.run(host='0.0.0.0', port=5000)
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()
