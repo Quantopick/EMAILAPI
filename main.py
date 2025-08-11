@@ -127,7 +127,7 @@ def scheduled_evening_email_job():
     """Evening email job - 4:25 PM"""
     with app.app_context():
         print(f"[{datetime.now(UAE_TZ).strftime('%Y-%m-%d %H:%M:%S')}] Sending scheduled evening emails...")
-        success, message, count = send_emails_with_subject("📈 Evening Analysis")
+        success, message, count = send_emails_with_subject("🌇 Evening Analysis")
         if success:
             print(f"✅ Evening emails sent successfully: {message}")
         else:
@@ -167,4 +167,5 @@ if __name__ == '__main__':
     except (KeyboardInterrupt, SystemExit):
         print("🛑 Shutting down scheduler...")
         scheduler.shutdown()
+
 
