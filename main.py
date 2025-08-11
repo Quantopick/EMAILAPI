@@ -153,7 +153,7 @@ if __name__ == '__main__':
         trigger='cron',
         day_of_week='mon-fri',
         hour=16,  # 4 PM in 24-hour format
-        minute=25,
+        minute=0,
         id='evening_emails'
     )
     
@@ -167,3 +167,4 @@ if __name__ == '__main__':
     except (KeyboardInterrupt, SystemExit):
         print("🛑 Shutting down scheduler...")
         scheduler.shutdown()
+
