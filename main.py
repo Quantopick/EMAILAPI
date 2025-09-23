@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
-from datetime import datetime, timezone, timedelta
+from flask_cors import CORS
+from datetime import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, From, To, HtmlContent
 from dotenv import load_dotenv
@@ -13,19 +14,20 @@ import pytz
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 SENDER_EMAIL = os.getenv('SENDER_EMAIL')  # e.g., support@forex_bullion.com
 TEMPLATE_PATH = "template.html"
 
-# ✅ UAE Timezone
+# UAE Timezone
 UAE_TZ = pytz.timezone("Asia/Dubai")
 
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"message": "Email API is working!"}), 200
 
-# ✅ Generic function to send emails with custom subject
+# Generic function to send emails with custom subject
 def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bullion"):
     """
     Generic function to send emails with customizable subject
@@ -87,31 +89,18 @@ def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bu
 
 @app.route('/send-emails', methods=['GET'])
 def send_emails():
-    """Original endpoint - maintains backward compatibility"""
+    """Endpoint for sending morning emails manually"""
     try:
         success, message, count = send_emails_with_subject("🌅 Morning Analysis")
         if success:
-            return jsonify({"message": message}), 200
+            return jsonify({"message": message, "count": count}), 200
         else:
             return jsonify({"error": message}), 500
     except Exception as e:
         logging.exception("Error occurred during email sending:")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/send-evening-emails', methods=['GET'])
-def send_evening_emails():
-    """New endpoint for evening emails"""
-    try:
-        success, message, count = send_emails_with_subject("📈 Evening Analysis")
-        if success:
-            return jsonify({"message": message}), 200
-        else:
-            return jsonify({"error": message}), 500
-    except Exception as e:
-        logging.exception("Error occurred during evening email sending:")
-        return jsonify({"error": str(e)}), 500
-
-# ✅ Function to be called by the morning scheduler
+# Function to be called by the morning scheduler
 def scheduled_morning_email_job():
     """Morning email job - 10:01 AM"""
     with app.app_context():
@@ -122,19 +111,8 @@ def scheduled_morning_email_job():
         else:
             print(f"❌ Morning email error: {message}")
 
-# ✅ Function to be called by the evening scheduler
-def scheduled_evening_email_job():
-    """Evening email job - 4:25 PM"""
-    with app.app_context():
-        print(f"[{datetime.now(UAE_TZ).strftime('%Y-%m-%d %H:%M:%S')}] Sending scheduled evening emails...")
-        success, message, count = send_emails_with_subject("🌇 Evening Analysis")
-        if success:
-            print(f"✅ Evening emails sent successfully: {message}")
-        else:
-            print(f"❌ Evening email error: {message}")
-
 if __name__ == '__main__':
-    # ✅ Scheduler Setup
+    # Scheduler Setup
     scheduler = BackgroundScheduler(timezone=UAE_TZ)
     
     # Morning job runs at 10:01 AM Monday to Friday
@@ -147,25 +125,12 @@ if __name__ == '__main__':
         id='morning_emails'
     )
     
-    # ✅ NEW: Evening job runs at 4:25 PM Monday to Friday  
-    scheduler.add_job(
-        scheduled_evening_email_job,
-        trigger='cron',
-        day_of_week='mon-fri',
-        hour=16,  # 4 PM in 24-hour format
-        minute=0,
-        id='evening_emails'
-    )
-    
     scheduler.start()
     print("📅 Email scheduler started:")
     print("  - Morning emails: Monday-Friday at 10:01 AM UAE time")
-    print("  - Evening emails: Monday-Friday at 4:25 PM UAE time")
     
     try:
         app.run(host='0.0.0.0', port=5000)
     except (KeyboardInterrupt, SystemExit):
         print("🛑 Shutting down scheduler...")
         scheduler.shutdown()
-
-
