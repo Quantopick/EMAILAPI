@@ -32,7 +32,6 @@ def home():
         "message": "Email API is working!", 
         "endpoints": {
             "send_morning_emails": "/send-morning-emails",
-            "send_evening_emails": "/send-evening-emails",
             "send_custom_emails": "/send-custom-emails"
         }
     }), 200
@@ -148,37 +147,6 @@ def send_morning_emails():
             "type": "morning"
         }), 500
 
-@app.route('/send-evening-emails', methods=['POST'])
-def send_evening_emails():
-    """Endpoint for sending evening emails via button click"""
-    try:
-        logger.info("Evening email request received")
-        success, message, count = send_emails_with_subject("🌙 Evening Analysis - Forex_Bullion")
-        
-        if success:
-            logger.info(f"Evening emails sent successfully: {message}")
-            return jsonify({
-                "success": True,
-                "message": message, 
-                "count": count,
-                "type": "evening"
-            }), 200
-        else:
-            logger.error(f"Evening email failed: {message}")
-            return jsonify({
-                "success": False,
-                "error": message,
-                "type": "evening"
-            }), 500
-            
-    except Exception as e:
-        logger.exception("Error occurred during evening email sending:")
-        return jsonify({
-            "success": False,
-            "error": str(e),
-            "type": "evening"
-        }), 500
-
 @app.route('/send-custom-emails', methods=['POST'])
 def send_custom_emails():
     """Endpoint for sending emails with custom subject via button click"""
@@ -228,7 +196,6 @@ if __name__ == '__main__':
     print("🚀 Email API Server Starting...")
     print("📧 Available endpoints:")
     print("  - POST /send-morning-emails")
-    print("  - POST /send-evening-emails") 
     print("  - POST /send-custom-emails")
     print("  - GET /health")
     print("  - GET /")
