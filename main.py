@@ -1,4 +1,5 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, send_from_directory
+from flask_cors import CORS  # Add this for handling CORS
 from datetime import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, From, To, HtmlContent
@@ -13,10 +14,12 @@ import pytz
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 SENDER_EMAIL = os.getenv('SENDER_EMAIL')  # e.g., support@forex_bullion.com
-TEMPLATE_PATH = "template.html"
+TEMPLATE_PATH = "template.html"  # Your email template
+TEST_PAGE_PATH = "test_email_button.html"  # Test page with button
 
 # ✅ UAE Timezone
 UAE_TZ = pytz.timezone("Asia/Dubai")
@@ -24,6 +27,23 @@ UAE_TZ = pytz.timezone("Asia/Dubai")
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"message": "Email API is working!"}), 200
+
+# ✅ Route to serve the test page
+@app.route('/test', methods=['GET'])
+def test_page():
+    """Serve the test page with email send button"""
+    try:
+        with open(TEST_PAGE_PATH, 'r', encoding='utf-8') as file:
+            html_content = file.read()
+        return html_content, 200
+    except FileNotFoundError:
+        return jsonify({"error": "Test page not found. Please ensure test_email_button.html is in the same directory as app.py"}), 404
+
+# ✅ Alternative route if you want to serve it as a static file
+@app.route('/test-page')
+def serve_test_page():
+    """Alternative way to serve the test page"""
+    return send_from_directory('.', 'test_email_button.html')
 
 # ✅ Generic function to send emails with custom subject
 def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bullion"):
@@ -85,18 +105,29 @@ def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bu
         logging.exception("Error occurred during email sending:")
         return False, str(e), 0
 
-@app.route('/send-emails', methods=['GET'])
+@app.route('/send-emails', methods=['GET', 'POST'])  # Accept both GET and POST
 def send_emails():
     """Endpoint for sending morning emails manually"""
     try:
         success, message, count = send_emails_with_subject("🌅 Morning Analysis")
         if success:
-            return jsonify({"message": message}), 200
+            return jsonify({
+                "message": message,
+                "status": "success",
+                "count": count,
+                "timestamp": datetime.now(UAE_TZ).isoformat()
+            }), 200
         else:
-            return jsonify({"error": message}), 500
+            return jsonify({
+                "error": message,
+                "status": "error"
+            }), 500
     except Exception as e:
         logging.exception("Error occurred during email sending:")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "error": str(e),
+            "status": "error"
+        }), 500
 
 # ✅ Function to be called by the morning scheduler
 def scheduled_morning_email_job():
@@ -126,9 +157,11 @@ if __name__ == '__main__':
     scheduler.start()
     print("📅 Email scheduler started:")
     print("  - Morning emails: Monday-Friday at 10:01 AM UAE time")
+    print("\n🌐 Test page available at: http://localhost:5000/test")
+    print("📧 API endpoint: http://localhost:5000/send-emails")
     
     try:
-        app.run(host='0.0.0.0', port=5000)
+        app.run(host='0.0.0.0', port=5000, debug=True)
     except (KeyboardInterrupt, SystemExit):
         print("🛑 Shutting down scheduler...")
         scheduler.shutdown()
