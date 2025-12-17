@@ -17,7 +17,46 @@ import json
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# CORS Configuration - Allow requests from your website
+CORS(app, 
+     origins=[
+         "https://quantopick.com",
+         "https://www.quantopick.com",
+         "http://localhost:3000",  # For local development
+         "http://localhost:5000",  # For local development
+         "http://127.0.0.1:3000",
+         "http://127.0.0.1:5000"
+     ],
+     allow_headers=["Content-Type", "Authorization", "X-API-Key", "Accept"],
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     supports_credentials=True,
+     max_age=3600  # Cache preflight requests for 1 hour
+)
+
+# Additional CORS headers for all responses
+@app.after_request
+def after_request(response):
+    """Add CORS headers to all responses"""
+    origin = request.headers.get('Origin')
+    allowed_origins = [
+        "https://quantopick.com",
+        "https://www.quantopick.com",
+        "http://localhost:3000",
+        "http://localhost:5000",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5000"
+    ]
+    
+    if origin in allowed_origins:
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-API-Key, Accept'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers['Access-Control-Max-Age'] = '3600'
+    
+    return response
+
 
 # Configuration
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
@@ -432,6 +471,20 @@ def home():
         "last_execution": last_execution,
         "monitoring_status": monitoring_status if ENABLE_MONITORING else None,
         "schedule_config": schedule_config
+    }), 200
+
+@app.route('/cors-test', methods=['GET', 'OPTIONS'])
+def cors_test():
+    """Simple endpoint to test CORS configuration"""
+    if request.method == 'OPTIONS':
+        # Preflight request
+        return '', 204
+    
+    return jsonify({
+        "status": "success",
+        "message": "CORS is working!",
+        "origin": request.headers.get('Origin', 'Unknown'),
+        "timestamp": datetime.now(UAE_TZ).strftime('%Y-%m-%d %H:%M:%S %Z')
     }), 200
 
 @app.route('/health', methods=['GET'])
@@ -1070,7 +1123,7 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug_mode = ENVIRONMENT == 'development'
     
-    app.run(
+    main.run(
         host='0.0.0.0',
         port=port,
         debug=debug_mode,
