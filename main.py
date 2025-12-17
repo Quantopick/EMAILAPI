@@ -1123,9 +1123,10 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug_mode = ENVIRONMENT == 'development'
     
-    main.run(
+    app.run(
         host='0.0.0.0',
         port=port,
         debug=debug_mode,
         use_reloader=False  # Important: Prevents duplicate scheduler instances
     )
+
