@@ -1129,4 +1129,3 @@ if __name__ == '__main__':
         debug=debug_mode,
         use_reloader=False  # Important: Prevents duplicate scheduler instances
     )
-
