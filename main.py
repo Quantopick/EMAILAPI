@@ -18,52 +18,76 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# CORS Configuration - Allow requests from your website
+# ===========================
+# IMPROVED CORS CONFIGURATION
+# ===========================
+
+# Define allowed origins
+ALLOWED_ORIGINS = [
+    "https://quantopick.com",
+    "https://www.quantopick.com",
+    "http://localhost:3000",
+    "http://localhost:5000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5000"
+]
+
+# Configure CORS with explicit settings
 CORS(app, 
-     origins=[
-         "https://quantopick.com",
-         "https://www.quantopick.com",
-         "http://localhost:3000",  # For local development
-         "http://localhost:5000",  # For local development
-         "http://127.0.0.1:3000",
-         "http://127.0.0.1:5000"
-     ],
-     allow_headers=["Content-Type", "Authorization", "X-API-Key", "Accept"],
-     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-     supports_credentials=True,
-     max_age=3600  # Cache preflight requests for 1 hour
+     resources={
+         r"/*": {
+             "origins": ALLOWED_ORIGINS,
+             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             "allow_headers": ["Content-Type", "Authorization", "X-API-Key", "Accept"],
+             "expose_headers": ["Content-Type"],
+             "supports_credentials": True,
+             "max_age": 3600
+         }
+     }
 )
 
 # Additional CORS headers for all responses
 @app.after_request
 def after_request(response):
-    """Add CORS headers to all responses"""
+    """Add comprehensive CORS headers to all responses"""
     origin = request.headers.get('Origin')
-    allowed_origins = [
-        "https://quantopick.com",
-        "https://www.quantopick.com",
-        "http://localhost:3000",
-        "http://localhost:5000",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5000"
-    ]
     
-    if origin in allowed_origins:
+    # Check if origin is allowed
+    if origin in ALLOWED_ORIGINS:
         response.headers['Access-Control-Allow-Origin'] = origin
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-API-Key, Accept'
-        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response.headers['Access-Control-Allow-Credentials'] = 'true'
-        response.headers['Access-Control-Max-Age'] = '3600'
+    else:
+        # For security, still allow the request but log it
+        logger.warning(f"Request from non-whitelisted origin: {origin}")
+        if origin:
+            response.headers['Access-Control-Allow-Origin'] = origin
+    
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-API-Key, Accept'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Max-Age'] = '3600'
+    
+    # Prevent caching of CORS preflight
+    if request.method == 'OPTIONS':
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
     
     return response
 
+# Explicit OPTIONS handler for all routes
+@app.route('/', methods=['OPTIONS'])
+@app.route('/<path:path>', methods=['OPTIONS'])
+def handle_options(path=None):
+    """Handle preflight OPTIONS requests"""
+    response = jsonify({'status': 'ok'})
+    return response, 200
 
 # Configuration
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 SENDER_EMAIL = os.getenv('SENDER_EMAIL')
-ALERT_EMAIL = os.getenv('ALERT_EMAIL')  # Email to receive error notifications
+ALERT_EMAIL = os.getenv('ALERT_EMAIL')
 TEMPLATE_PATH = os.getenv('TEMPLATE_PATH', 'template.html')
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')  # 'development' or 'production'
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 ENABLE_MONITORING = os.getenv('ENABLE_MONITORING', 'true').lower() == 'true'
 MONITORING_INTERVAL_HOURS = int(os.getenv('MONITORING_INTERVAL_HOURS', '6'))
 
@@ -185,10 +209,6 @@ def send_error_notification(error_type, error_message, additional_info=None):
                 .success-box {{ background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 15px 0; }}
                 .info {{ background: white; padding: 15px; margin: 10px 0; border-radius: 3px; }}
                 .footer {{ margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }}
-                .status-badge {{ display: inline-block; padding: 5px 10px; border-radius: 3px; font-weight: bold; }}
-                .status-success {{ background: #d4edda; color: #155724; }}
-                .status-warning {{ background: #fff3cd; color: #856404; }}
-                .status-error {{ background: #f8d7da; color: #721c24; }}
             </style>
         </head>
         <body>
@@ -313,7 +333,6 @@ def check_last_execution_status():
     try:
         last_time_str = last_execution.get('timestamp')
         if last_time_str:
-            # Parse timestamp
             last_time = datetime.strptime(last_time_str.rsplit(' ', 1)[0], '%Y-%m-%d %H:%M:%S')
             last_time = UAE_TZ.localize(last_time)
             
@@ -340,7 +359,6 @@ def check_sendgrid_contacts():
             "Content-Type": "application/json"
         }
         
-        # Try to fetch contacts
         response = requests.get(
             "https://api.sendgrid.com/v3/marketing/contacts",
             headers=headers,
@@ -348,7 +366,6 @@ def check_sendgrid_contacts():
         )
         
         if response.status_code != 200:
-            # Try search API
             search_payload = {"query": ""}
             response = requests.post(
                 "https://api.sendgrid.com/v3/marketing/contacts/search",
@@ -378,7 +395,6 @@ def run_health_monitoring():
         checks_passed = 0
         checks_failed = 0
         
-        # Check 1: SendGrid Configuration
         logger.info("1️⃣ Checking SendGrid configuration...")
         config_issues = check_sendgrid_config()
         if config_issues:
@@ -389,7 +405,6 @@ def run_health_monitoring():
             checks_passed += 1
             logger.info("  ✅ SendGrid configuration OK")
         
-        # Check 2: Last Execution Status
         logger.info("2️⃣ Checking last execution status...")
         exec_issues = check_last_execution_status()
         if exec_issues:
@@ -400,7 +415,6 @@ def run_health_monitoring():
             checks_passed += 1
             logger.info("  ✅ Last execution OK")
         
-        # Check 3: SendGrid Contacts
         logger.info("3️⃣ Checking SendGrid contacts...")
         contact_issues = check_sendgrid_contacts()
         if contact_issues:
@@ -411,14 +425,12 @@ def run_health_monitoring():
             checks_passed += 1
             logger.info("  ✅ Contacts check OK")
         
-        # Update monitoring status
         monitoring_status["last_check"] = now_uae.strftime('%Y-%m-%d %H:%M:%S %Z')
         monitoring_status["issues_found"] = all_issues
         monitoring_status["checks_passed"] = checks_passed
         monitoring_status["checks_failed"] = checks_failed
         monitoring_status["status"] = "Healthy" if not all_issues else "Issues Found"
         
-        # Send alert if issues found
         if all_issues:
             logger.warning(f"⚠️ Monitoring found {len(all_issues)} issue(s)")
             issue_summary = "\n".join(f"• {issue}" for issue in all_issues)
@@ -470,16 +482,14 @@ def home():
         "monitoring_enabled": ENABLE_MONITORING,
         "last_execution": last_execution,
         "monitoring_status": monitoring_status if ENABLE_MONITORING else None,
-        "schedule_config": schedule_config
+        "schedule_config": schedule_config,
+        "cors_enabled": True,
+        "allowed_origins": ALLOWED_ORIGINS
     }), 200
 
-@app.route('/cors-test', methods=['GET', 'OPTIONS'])
+@app.route('/cors-test', methods=['GET'])
 def cors_test():
     """Simple endpoint to test CORS configuration"""
-    if request.method == 'OPTIONS':
-        # Preflight request
-        return '', 204
-    
     return jsonify({
         "status": "success",
         "message": "CORS is working!",
@@ -510,12 +520,10 @@ def health():
         "monitoring": monitoring_status if ENABLE_MONITORING else None
     }
     
-    # Check if any critical config is missing
     if not all([SENDGRID_API_KEY, SENDER_EMAIL]):
         health_status["status"] = "degraded"
         health_status["warning"] = "Missing critical configuration"
     
-    # Check if monitoring found issues
     if ENABLE_MONITORING and monitoring_status.get("issues_found"):
         health_status["status"] = "degraded"
         health_status["warning"] = f"Monitoring found {len(monitoring_status['issues_found'])} issue(s)"
@@ -549,7 +557,6 @@ def update_schedule():
         minute = data.get('minute')
         updated_by = data.get('updated_by', 'web_interface')
         
-        # Validate inputs
         if hour is None or minute is None:
             return jsonify({
                 "status": "error",
@@ -580,21 +587,16 @@ def update_schedule():
         old_schedule = f"{schedule_config['hour']:02d}:{schedule_config['minute']:02d}"
         new_schedule = f"{hour:02d}:{minute:02d}"
         
-        # Update schedule config
         schedule_config['hour'] = hour
         schedule_config['minute'] = minute
         schedule_config['last_updated'] = datetime.now(UAE_TZ).strftime('%Y-%m-%d %H:%M:%S %Z')
         schedule_config['updated_by'] = updated_by
         
-        # Save to file
         save_schedule_config()
-        
-        # Reschedule the job
         reschedule_daily_job(hour, minute)
         
         logger.info(f"✅ Schedule updated from {old_schedule} to {new_schedule} by {updated_by}")
         
-        # Send notification
         send_error_notification(
             "Schedule Updated",
             f"Email schedule has been successfully updated from {old_schedule} to {new_schedule} Dubai Time",
@@ -760,7 +762,6 @@ def manual_monitor():
 def trigger_test():
     """Manual trigger for testing - requires API key in header for security"""
     try:
-        # Simple security check
         api_key = request.headers.get('X-API-Key')
         expected_key = os.getenv('MANUAL_TRIGGER_KEY', 'test-key-12345')
         
@@ -822,10 +823,7 @@ def monitoring_report():
 # ===========================
 
 def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bullion"):
-    """
-    Generic function to send emails with customizable subject
-    Returns tuple (success: bool, message: str, count: int)
-    """
+    """Generic function to send emails with customizable subject"""
     try:
         logger.info(f"📧 Starting email send process with subject: {subject_prefix}")
         
@@ -840,16 +838,13 @@ def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bu
             "Content-Type": "application/json"
         }
         
-        # Fetch contacts
         logger.info("🔍 Fetching contacts from SendGrid...")
         
-        # Try GET first
         response = requests.get("https://api.sendgrid.com/v3/marketing/contacts", headers=headers)
         logger.info(f"📊 GET Response Status: {response.status_code}")
         
         contacts = []
         
-        # If GET fails, try search API
         if response.status_code != 200:
             logger.warning(f"⚠️ GET request failed, trying search API...")
             search_payload = {"query": ""}
@@ -874,7 +869,6 @@ def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bu
         
         logger.info(f"✅ Successfully fetched {len(contacts)} contacts")
 
-        # Read template
         try:
             with open(TEMPLATE_PATH, 'r', encoding='utf-8') as file:
                 template = file.read()
@@ -895,7 +889,6 @@ def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bu
 
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         
-        # Send emails
         logger.info(f"📧 Starting to send emails to {len(contacts)} contacts...")
         sent_count = 0
         failed_emails = []
@@ -931,7 +924,6 @@ def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bu
                     "error": error_details
                 })
 
-        # Log results and send notifications
         if failed_emails:
             logger.warning(f"⚠️ {len(failed_emails)} emails failed to send")
             error_summary = f"Sent {sent_count}/{len(contacts)} emails"
@@ -944,7 +936,6 @@ def send_emails_with_subject(subject_prefix="📊 Daily Forex Signals - Forex_Bu
 
         logger.info(f"✅ All {sent_count} emails sent successfully!")
         
-        # Send success notification
         send_error_notification(
             "Email Sent Successfully",
             f"Successfully sent {sent_count} emails to subscribers",
@@ -970,14 +961,12 @@ def scheduled_daily_email_job():
         now_uae = datetime.now(UAE_TZ)
         logger.info(f"⏰ [{now_uae.strftime('%Y-%m-%d %H:%M:%S %Z')}] Starting scheduled daily email job...")
         
-        # Update last execution
         last_execution["timestamp"] = now_uae.strftime('%Y-%m-%d %H:%M:%S %Z')
         last_execution["status"] = "Running"
         
         with app.app_context():
             success, message, count = send_emails_with_subject("📊 Daily Forex Signals - Forex_Bullion")
             
-            # Update execution status
             last_execution["status"] = "Success" if success else "Failed"
             last_execution["message"] = message
             last_execution["emails_sent"] = count
@@ -987,7 +976,6 @@ def scheduled_daily_email_job():
                 logger.info(f"✅ Daily emails sent successfully: {message}")
             else:
                 logger.error(f"❌ Daily email job failed: {message}")
-                # Error notification already sent by send_emails_with_subject
         
     except Exception as e:
         error_msg = f"Scheduler job exception: {str(e)}"
@@ -1004,18 +992,15 @@ def scheduled_daily_email_job():
 # SCHEDULER SETUP
 # ===========================
 
-# Initialize scheduler
 scheduler = BackgroundScheduler(timezone=UAE_TZ)
 
 def reschedule_daily_job(hour, minute):
     """Reschedule the daily email job with new time"""
     try:
-        # Remove existing job if it exists
         if scheduler.get_job('daily_emails'):
             scheduler.remove_job('daily_emails')
             logger.info("🔄 Removed existing daily email job")
         
-        # Add new job with updated time
         scheduler.add_job(
             scheduled_daily_email_job,
             trigger='cron',
@@ -1032,10 +1017,8 @@ def reschedule_daily_job(hour, minute):
         logger.error(f"❌ Error rescheduling job: {e}")
         raise
 
-# Load saved schedule configuration
 load_schedule_config()
 
-# Add daily email job with loaded configuration
 scheduler.add_job(
     scheduled_daily_email_job,
     trigger='cron',
@@ -1046,7 +1029,6 @@ scheduler.add_job(
     replace_existing=True
 )
 
-# Add monitoring job if enabled
 if ENABLE_MONITORING:
     scheduler.add_job(
         scheduled_monitoring_job,
@@ -1058,14 +1040,12 @@ if ENABLE_MONITORING:
     )
     logger.info(f"📊 Monitoring job scheduled every {MONITORING_INTERVAL_HOURS} hours")
 
-# Start scheduler
 scheduler.start()
 logger.info("📅 Email scheduler started successfully")
 logger.info(f"  - Daily emails: Every day at {schedule_config['hour']:02d}:{schedule_config['minute']:02d} UAE time")
 if ENABLE_MONITORING:
     logger.info(f"  - Health monitoring: Every {MONITORING_INTERVAL_HOURS} hours")
 
-# Shutdown scheduler gracefully when app stops
 atexit.register(lambda: scheduler.shutdown())
 
 # ===========================
@@ -1084,6 +1064,7 @@ if __name__ == '__main__':
     print(f"Current time: {datetime.now(UAE_TZ).strftime('%Y-%m-%d %H:%M:%S %Z')}")
     print("\n🌐 Available endpoints:")
     print("  - Home:            GET  /")
+    print("  - CORS Test:       GET  /cors-test")
     print("  - Health:          GET  /health")
     print("  - Status:          GET  /status")
     print("  - Get schedule:    GET  /get-schedule")
@@ -1098,20 +1079,23 @@ if __name__ == '__main__':
     print(f"  - Sender: {SENDER_EMAIL}")
     print(f"  - Alert Email: {ALERT_EMAIL if ALERT_EMAIL else 'Not configured'}")
     print(f"  - Template: {TEMPLATE_PATH}")
+    print(f"\n🔒 CORS Configuration:")
+    print(f"  - Enabled: Yes")
+    print(f"  - Allowed Origins: {len(ALLOWED_ORIGINS)}")
+    for origin in ALLOWED_ORIGINS:
+        print(f"    • {origin}")
     print("="*60 + "\n")
     
-    # Send startup notification
     try:
         if ALERT_EMAIL:
             send_error_notification(
                 "API Started",
                 f"Email API has been started successfully at {datetime.now(UAE_TZ).strftime('%Y-%m-%d %H:%M:%S %Z')}",
-                f"Environment: {ENVIRONMENT}\nSchedule: Daily at {schedule_config['hour']:02d}:{schedule_config['minute']:02d} UAE time\nMonitoring: {'Enabled' if ENABLE_MONITORING else 'Disabled'}"
+                f"Environment: {ENVIRONMENT}\nSchedule: Daily at {schedule_config['hour']:02d}:{schedule_config['minute']:02d} UAE time\nMonitoring: {'Enabled' if ENABLE_MONITORING else 'Disabled'}\nCORS: Enabled"
             )
     except Exception as e:
         logger.warning(f"Could not send startup notification: {e}")
     
-    # Run initial health check if monitoring is enabled
     if ENABLE_MONITORING:
         try:
             logger.info("🔍 Running initial health check...")
@@ -1119,7 +1103,6 @@ if __name__ == '__main__':
         except Exception as e:
             logger.warning(f"Could not run initial health check: {e}")
     
-    # Run Flask app
     port = int(os.getenv('PORT', 5000))
     debug_mode = ENVIRONMENT == 'development'
     
@@ -1127,5 +1110,5 @@ if __name__ == '__main__':
         host='0.0.0.0',
         port=port,
         debug=debug_mode,
-        use_reloader=False  # Important: Prevents duplicate scheduler instances
+        use_reloader=False
     )
