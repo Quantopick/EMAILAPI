@@ -1,308 +1,330 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Template - Forex_Bullion</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #f8fafc;
-            line-height: 1.6;
-        }
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Email Template - Quantopick</title>
+            <style>
+                body {
+                    margin: 0;
+                    padding: 20px;
+                    font-family: Arial, sans-serif;
+                    background-color: #f8fafc;
+                    line-height: 1.6;
+                }
+                
+                .email-container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background-color: #ffffff;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+                }
+                
+                .email-content {
+                    padding: 30px;
+                }
+                
+                .signal-section {
+                    margin-bottom: 15px;
+                    border-bottom: 1px solid #e2e8f0;
+                    padding-bottom: 15px;
+                }
+                
+                .signal-section:last-child {
+                    border-bottom: none;
+                }
+                
+                .signal-image {
+                    width: 100%;
+                    height: auto;
+                    border-radius: 8px;
+                    margin-bottom: 8px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+                
+                .email-header-image {
+                    width: 100%;
+                    height: auto;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+                
+                .section-title {
+                    font-size: 1.3em;
+                    font-weight: bold;
+                    color: #2d3748;
+                    margin: 25px 0 15px 0;
+                    padding: 12px 20px;
+                    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+                    border-left: 4px solid #303f9f;
+                    border-radius: 0 8px 8px 0;
+                }
+                
+                .footer-content {
+                    background: #f8f9fa;
+                    color: #333;
+                    padding: 25px;
+                    border-radius: 10px;
+                    margin-top: 25px;
+                    text-align: left;
+                    border: 1px solid #e9ecef;
+                }
+                
+                .footer-section {
+                    margin-bottom: 20px;
+                }
+                
+                .footer-section:last-child {
+                    margin-bottom: 0;
+                }
+                
+                .footer-section h4 {
+                    color: #303f9f;
+                    margin-bottom: 10px;
+                    font-size: 1.1em;
+                    border-bottom: 2px solid #303f9f;
+                    padding-bottom: 5px;
+                }
+                
+                .footer-section p {
+                    margin-bottom: 10px;
+                    line-height: 1.5;
+                    font-size: 0.95em;
+                }
+                
+                @media (max-width: 600px) {
+                    .email-container {
+                        margin: 10px;
+                        border-radius: 8px;
+                    }
+                    
+                    .email-content {
+                        padding: 20px;
+                    }
+                    
+                    .footer-content {
+                        padding: 15px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="email-container">
+                <div class="email-content">
+        
+                    <!-- CLIENT LOGO HEADER -->
+                    <img src="https://res.cloudinary.com/dejlkojff/image/upload/v1766063909/Quantopick_logo_ut13kf.jpg?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                         alt="Quantopick Logo" 
+                         class="email-header-image">
+            
+                    <!-- SIGNAL 1 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_1_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 1 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_1_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 1 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_1_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 1 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 2 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_2_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 2 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_2_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 2 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_2_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 2 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 3 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_3_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 3 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_3_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 3 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_3_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 3 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 4 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_4_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 4 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_4_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 4 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_4_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 4 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 5 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_5_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 5 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_5_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 5 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_5_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 5 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 6 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_6_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 6 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_6_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 6 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_6_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 6 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 7 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_7_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 7 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_7_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 7 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_7_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 7 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 8 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_8_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 8 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_8_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 8 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_8_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 8 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 9 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_9_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 9 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_9_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 9 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_9_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 9 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 10 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_10_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 10 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_10_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 10 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_10_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 10 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 11 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_11_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 11 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_11_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 11 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_11_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 11 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- SIGNAL 12 -->
+                    <div class="signal-section">
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/header/QP_12_header.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 12 Header" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/chart/QP_12_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 12 Chart" 
+                             class="signal-image">
+                        
+                        <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/strategy/QP_12_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                             alt="Signal 12 Combined Strategy" 
+                             class="signal-image">
+                    </div>
+            
+                    <!-- ECONOMIC CALENDAR -->
+                    <div class="section-title">📅 Today's Economic Events</div>
+                    <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Quantopick/economic_calendar/QP_economic_calendar.png?v={{TODAY}}&cb={{TIMESTAMP}}" 
+                         alt="Economic Calendar" 
+                         class="signal-image">
+        
+                    <!-- FOOTER CONTENT -->
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h4>About Us</h4>
+                            <p>FOREXBULLION Mauritius, we are recognized for our innovative trading solutions, robust regulatory standards, and unwavering commitment to customer satisfaction.</p>
+                        </div>
+                        <div class="footer-section">
+                            <h4>Important Disclaimer</h4>
+                            <p>This email, along with any attached analyses, data, or visual content, is provided "as is" without any guarantees, whether expressed or implied. As a third-party broker, we emphasize that while the information is derived from sources considered reliable, including materials prepared by Finnovic Consultancy, Dubai we cannot guarantee its accuracy or completeness. This communication is not to be construed as investment advice, a recommendation for finanical management, or an offer to engage in securities transactions. Recipients are strongly encouraged to perform their own due diligence, stay informed about current market conditions, and seek guidance from independent financial advisors before making any investment decisions. Trading carries significant risks, including the potential for losses that may exceed your initial investment. Exercise caution and consult with a professional advisor to navigate the complexities of financial markets responsibly and mitigate potential losses.</p>
+                        </div>
+                        <div class="footer-section">
+                            <h4>Broker Disclaimer</h4>
+                            <p>CFDs are complex financial instruments that carry a high risk of rapid financial loss due to leverage. You should evaluate if you fully understand how CFDs operate and whether you can bear the substantial risk of potential financial loss. Past performance does not predict future results. It is the Client’s responsibility to determine if they are legally permitted to use our services based on the regulations in their country of residence.</p>
+                        </div>
+                    </div>
 
-        .email-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .email-content {
-            padding: 30px;
-        }
-
-        .signal-section {
-            margin-bottom: 15px;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 15px;
-        }
-
-        .signal-section:last-child {
-            border-bottom: none;
-        }
-
-        .signal-image {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .email-header-image {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #2d3748;
-            margin: 25px 0 15px 0;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            border-left: 4px solid #303f9f;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .footer-content {
-            background: #f8f9fa;
-            color: #333;
-            padding: 25px;
-            border-radius: 10px;
-            margin-top: 25px;
-            text-align: left;
-            border: 1px solid #e9ecef;
-        }
-
-        .footer-section {
-            margin-bottom: 20px;
-        }
-
-        .footer-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .footer-section h4 {
-            color: #303f9f;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-            border-bottom: 2px solid #303f9f;
-            padding-bottom: 5px;
-        }
-
-        .footer-section p {
-            margin-bottom: 10px;
-            line-height: 1.5;
-            font-size: 0.95em;
-        }
-
-        @media (max-width: 600px) {
-            .email-container {
-                margin: 10px;
-                border-radius: 8px;
-            }
-
-            .email-content {
-                padding: 20px;
-            }
-
-            .footer-content {
-                padding: 15px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="email-container">
-        <div class="email-content">
-
-            <!-- CLIENT LOGO HEADER -->
-            <img src="https://res.cloudinary.com/dejlkojff/image/upload/v1736750833/chart_2025011306/forex_Bullion_logo.jpg?v={{TODAY}}&cb={{TIMESTAMP}}"
-                alt="Forex_Bullion Logo" class="email-header-image">
-
-            <!-- SIGNAL 1 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_1_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 1 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_1_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 1 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_1_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 1 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 2 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_2_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 2 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_2_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 2 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_2_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 2 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 3 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_3_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 3 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_3_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 3 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_3_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 3 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 4 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_4_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 4 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_4_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 4 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_4_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 4 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 5 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_5_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 5 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_5_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 5 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_5_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 5 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 6 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_6_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 6 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_6_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 6 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_6_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 6 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 7 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_7_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 7 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_7_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 7 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_7_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 7 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 8 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_8_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 8 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_8_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 8 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_8_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 8 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 9 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_9_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 9 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_9_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 9 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_9_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 9 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 10 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_10_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 10 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_10_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 10 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_10_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 10 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 11 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_11_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 11 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_11_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 11 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_11_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 11 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- SIGNAL 12 -->
-            <div class="signal-section">
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/header/FB_12_header.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 12 Header" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/chart/FB_12_chart.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 12 Chart" class="signal-image">
-
-                <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/strategy/FB_12_strategy.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                    alt="Signal 12 Combined Strategy" class="signal-image">
-            </div>
-
-            <!-- ECONOMIC CALENDAR -->
-            <div class="section-title">📅 Today's Economic Events</div>
-            <img src="https://res.cloudinary.com/dejlkojff/image/upload/signals_pdfstyle/Forex_Bullion/economic_calendar/FB_economic_calendar.png?v={{TODAY}}&cb={{TIMESTAMP}}"
-                alt="Economic Calendar" class="signal-image">
-
-            <!-- FOOTER CONTENT -->
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>About Us</h4>
-                    <p>FOREXBULLION Mauritius, we are recognized for our innovative trading solutions, robust regulatory
-                        standards, and unwavering commitment to customer satisfaction.</p>
                 </div>
-                <div class="footer-section">
-                    <h4>Important Disclaimer</h4>
-                    <p>This email, along with any attached analyses, data, or visual content, is provided "as is"
-                        without any guarantees, whether expressed or implied. As a third-party broker, we emphasize that
-                        while the information is derived from sources considered reliable, including materials prepared
-                        by Mount Trading Solutions Limited, United Kingdom, we cannot guarantee its accuracy or
-                        completeness. This communication is not to be construed as investment advice, a recommendation
-                        for finanical management, or an offer to engage in securities transactions. Recipients are
-                        strongly encouraged to perform their own due diligence, stay informed about current market
-                        conditions, and seek guidance from independent financial advisors before making any investment
-                        decisions. Trading carries significant risks, including the potential for losses that may exceed
-                        your initial investment. Exercise caution and consult with a professional advisor to navigate
-                        the complexities of financial markets responsibly and mitigate potential losses.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Broker Disclaimer</h4>
-                    <p>CFDs are complex financial instruments that carry a high risk of rapid financial loss due to
-                        leverage. You should evaluate if you fully understand how CFDs operate and whether you can bear
-                        the substantial risk of potential financial loss. Past performance does not predict future
-                        results. It is the Client’s responsibility to determine if they are legally permitted to use
-                        mount1 services based on the regulations in their country of residence.</p>
-                </div>
             </div>
-
-        </div>
-    </div>
-</body>
-
-</html>
+        </body>
+        </html>
+        
